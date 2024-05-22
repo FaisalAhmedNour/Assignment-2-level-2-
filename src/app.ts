@@ -6,7 +6,7 @@ app.use(express.json())
 app.use(cors())
 
 app.get('/', (req: Request, res: Response) => {
-    var a = 5;
+    const a = 5;
   res.send(a)
 })
 
