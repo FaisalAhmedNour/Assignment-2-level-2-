@@ -11,15 +11,15 @@ app.use(cors());
 app.use('/api/products', ProductRouters);
 app.use('/api/orders', OrderRouters);
 
+app.get('/', (req: Request, res: Response) => {
+  res.send('Running!');
+});
+
 app.all('*', (req: Request, res: Response) => {
   res.status(400).json({
     success: false,
     message: 'Route not found',
   });
-});
-
-app.get('/', (req: Request, res: Response) => {
-  res.send('Running!');
 });
 
 export default app;
