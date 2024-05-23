@@ -3,7 +3,6 @@ import { Products } from './product.model';
 
 const createProductIntoDB = async (product: ProductType) => {
   try {
-    // console.log('services: ',product);
     const result = await Products.create(product);
     return result;
   } catch (error) {
@@ -11,9 +10,9 @@ const createProductIntoDB = async (product: ProductType) => {
   }
 };
 
-const getProductsFromDB = async () => {
+const getProductsFromDB = async (searchTerm: string | undefined) => {
   try {
-    const result = await Products.find();
+    const result = await Products.find(searchTerm ? {tags: searchTerm} : {});
     return result;
   } catch (error) {
     console.log(error);
@@ -44,9 +43,19 @@ const updateProductByIdFromDB = async (
   }
 };
 
+const deleteProductByIdFromDB = async (id: string) => {
+  try {
+    const result = await Products.deleteOne({ _id: id });
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const ProductServices = {
   createProductIntoDB,
   getProductsFromDB,
   getProductByIdFromDB,
   updateProductByIdFromDB,
+  deleteProductByIdFromDB
 };
