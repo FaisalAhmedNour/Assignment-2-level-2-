@@ -1,4 +1,4 @@
-# Node.js Server
+# E-Commerce Server
 
 This is a E-Commerce server project. It provides an API to handle various operations.
 
