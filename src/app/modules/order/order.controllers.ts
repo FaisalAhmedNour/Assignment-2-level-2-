@@ -1,24 +1,35 @@
 import { Request, Response } from 'express';
 import { OrderServices } from './order.services';
 import { OrderResultType } from './order.interface';
-import Joi from 'joi';
+import { JoiValidationSchemaForOrder } from './order.validate';
 
 const createOrder = async (req: Request, res: Response) => {
   try {
     const orderData = req.body;
-    const result: OrderResultType | undefined =
-      await OrderServices.createOrderIntoDB(orderData);
-    if (result?.message) {
+
+    const { error, value } = JoiValidationSchemaForOrder.validate(orderData);
+
+    if (error) {
       res.status(200).json({
         success: false,
-        message: result?.message,
+        message: 'Something went wrong!',
+        error: error.details,
       });
     } else {
-      res.status(200).json({
-        success: true,
-        message: 'Order created successfully!',
-        data: result,
-      });
+      const result: OrderResultType | undefined =
+        await OrderServices.createOrderIntoDB(value);
+      if (result?.message) {
+        res.status(200).json({
+          success: false,
+          message: result?.message,
+        });
+      } else {
+        res.status(200).json({
+          success: true,
+          message: 'Order created successfully!',
+          data: result,
+        });
+      }
     }
   } catch (error) {
     res.status(500).json({

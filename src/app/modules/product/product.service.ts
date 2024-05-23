@@ -6,16 +6,25 @@ const createProductIntoDB = async (product: ProductType) => {
     const result = await Products.create(product);
     return result;
   } catch (error) {
-    return { message: 'Something went wrong! Try again later.' };
+    console.log(error);
   }
 };
 
 const getProductsFromDB = async (searchTerm: string | undefined) => {
   try {
-    const result = await Products.find(searchTerm ? { tags: searchTerm } : {});
+    const result = await Products.find(
+      searchTerm
+        ? {
+            $or: [
+              { tags: { $regex: searchTerm, $options: 'i' } },
+              { name: { $regex: searchTerm, $options: 'i' } },
+            ],
+          }
+        : {},
+    );
     return result;
   } catch (error) {
-    return { message: 'Something went wrong! Try again later.' };
+    console.log(error);
   }
 };
 
@@ -24,7 +33,7 @@ const getProductByIdFromDB = async (id: string) => {
     const result = await Products.findById(id).exec();
     return result;
   } catch (error) {
-    return { message: 'Something went wrong! Try again later.' };
+    console.log(error);
   }
 };
 
@@ -39,7 +48,7 @@ const updateProductByIdFromDB = async (
     );
     return result;
   } catch (error) {
-    return { message: 'Something went wrong! Try again later.' };
+    console.log(error);
   }
 };
 
@@ -48,7 +57,7 @@ const deleteProductByIdFromDB = async (id: string) => {
     const result = await Products.deleteOne({ _id: id });
     return result;
   } catch (error) {
-    return { message: 'Something went wrong! Try again later.' };
+    console.log(error);
   }
 };
 

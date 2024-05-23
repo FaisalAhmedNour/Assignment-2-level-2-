@@ -17,3 +17,13 @@ export type inventoryType = {
   quantity: number;
   inStock: boolean;
 };
+
+export interface ProductDocument extends Document {
+  message?: string;
+}
+
+export type ProductResultWithMessageType = {
+  message?: string;
+};
+
+export type ProductResultType = ProductDocument | ProductResultWithMessageType;

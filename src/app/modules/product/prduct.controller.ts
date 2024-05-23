@@ -1,15 +1,29 @@
 import { Request, Response } from 'express';
 import { ProductServices } from './product.service';
+import { JoiValidationSchemaForProduct } from './product.validation';
+import { UpdateWriteOpResult } from 'mongoose';
 
 const createProduct = async (req: Request, res: Response) => {
   try {
     const productData = req.body;
-    const result = await ProductServices.createProductIntoDB(productData);
-    res.status(200).json({
-      success: true,
-      message: 'Product created successfully!',
-      data: result,
-    });
+
+    const { error, value } =
+      JoiValidationSchemaForProduct.validate(productData);
+
+    if (error) {
+      res.status(200).json({
+        success: true,
+        message: 'Product did not created!',
+        error: error.details,
+      });
+    } else {
+      const result = await ProductServices.createProductIntoDB(value);
+      res.status(200).json({
+        success: true,
+        message: 'Product created successfully!',
+        data: result,
+      });
+    }
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -74,22 +88,32 @@ const updateProductById = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const dataToUpdate = req.body;
-    const result = await ProductServices.updateProductByIdFromDB(
-      productId,
-      dataToUpdate,
-    );
-    if (result && result?.modifiedCount >= 1) {
-      res.status(200).json({
-        success: true,
-        message: 'Product updated successfully!',
-        data: dataToUpdate,
-      });
-    } else {
+
+    const { error, value } =
+      JoiValidationSchemaForProduct.validate(dataToUpdate);
+
+    if (error) {
       res.status(400).json({
         success: false,
-        message: 'Product did not updated!',
-        data: null,
+        message: 'Something went wrong!',
+        error: error.details,
       });
+    } else {
+      const result: UpdateWriteOpResult | undefined =
+        await ProductServices.updateProductByIdFromDB(productId, value);
+      if (result && result?.modifiedCount >= 1) {
+        res.status(200).json({
+          success: true,
+          message: 'Product updated successfully!',
+          data: value,
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          message: 'Product did not updated!',
+          data: null,
+        });
+      }
     }
   } catch (error) {
     res.status(500).json({
@@ -104,7 +128,7 @@ const deleteProductById = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const result = await ProductServices.deleteProductByIdFromDB(productId);
-    if (result && result?.deletedCount >= 1) {
+    if (result && result?.deletedCount && result?.deletedCount >= 1) {
       res.status(200).json({
         success: true,
         message: 'Product deleted successfully!',

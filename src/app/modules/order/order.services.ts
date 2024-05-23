@@ -28,7 +28,7 @@ const createOrderIntoDB = async (order: OrderType) => {
       return { message: 'Insufficient quantity available in inventory' };
     }
   } catch (error) {
-    return { message: 'Something went wrong! Try again later.' };
+    console.log(error);
   }
 };
 
@@ -39,7 +39,7 @@ const getOrderIntoDB = async (searchEmail: string | undefined) => {
     ).exec();
     return result;
   } catch (error) {
-    return { message: 'Something went wrong! Try again later.' };
+    console.log(error);
   }
 };
 
