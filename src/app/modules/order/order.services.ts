@@ -17,7 +17,7 @@ const createOrderIntoDB = async (order: OrderType) => {
             ? false
             : true,
       };
-      const updateResult = await Products.findOneAndUpdate(
+      await Products.findOneAndUpdate(
         { _id: order.productId },
         { $set: updateField },
       );
@@ -28,18 +28,18 @@ const createOrderIntoDB = async (order: OrderType) => {
       return { message: 'Insufficient quantity available in inventory' };
     }
   } catch (error) {
-    console.log(error);
+    return { message: 'Something went wrong! Try again later.' };
   }
 };
 
-const getOrderIntoDB = async (searchEmail : string | undefined) => {
+const getOrderIntoDB = async (searchEmail: string | undefined) => {
   try {
     const result = await Orders.find(
       searchEmail ? { email: searchEmail } : {},
     ).exec();
     return result;
   } catch (error) {
-    console.log(error);
+    return { message: 'Something went wrong! Try again later.' };
   }
 };
 

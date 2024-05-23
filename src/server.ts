@@ -10,7 +10,7 @@ async function main() {
       console.log(`App is listening on port ${config.port}`);
     });
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 }
 

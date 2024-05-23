@@ -6,16 +6,16 @@ const createProductIntoDB = async (product: ProductType) => {
     const result = await Products.create(product);
     return result;
   } catch (error) {
-    console.log(error);
+    return { message: 'Something went wrong! Try again later.' };
   }
 };
 
 const getProductsFromDB = async (searchTerm: string | undefined) => {
   try {
-    const result = await Products.find(searchTerm ? {tags: searchTerm} : {});
+    const result = await Products.find(searchTerm ? { tags: searchTerm } : {});
     return result;
   } catch (error) {
-    console.log(error);
+    return { message: 'Something went wrong! Try again later.' };
   }
 };
 
@@ -24,7 +24,7 @@ const getProductByIdFromDB = async (id: string) => {
     const result = await Products.findById(id).exec();
     return result;
   } catch (error) {
-    console.log(error);
+    return { message: 'Something went wrong! Try again later.' };
   }
 };
 
@@ -39,7 +39,7 @@ const updateProductByIdFromDB = async (
     );
     return result;
   } catch (error) {
-    console.log(error);
+    return { message: 'Something went wrong! Try again later.' };
   }
 };
 
@@ -48,7 +48,7 @@ const deleteProductByIdFromDB = async (id: string) => {
     const result = await Products.deleteOne({ _id: id });
     return result;
   } catch (error) {
-    console.log(error);
+    return { message: 'Something went wrong! Try again later.' };
   }
 };
 
@@ -57,5 +57,5 @@ export const ProductServices = {
   getProductsFromDB,
   getProductByIdFromDB,
   updateProductByIdFromDB,
-  deleteProductByIdFromDB
+  deleteProductByIdFromDB,
 };

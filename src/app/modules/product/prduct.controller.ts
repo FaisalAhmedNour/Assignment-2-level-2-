@@ -11,11 +11,10 @@ const createProduct = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.error('create Error: ', error);
     res.status(500).json({
       success: false,
       message: 'Failed to create product. Please try again later.',
-      data: null,
+      error: error,
     });
   }
 };
@@ -37,11 +36,10 @@ const getProducts = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       success: false,
       message: 'Failed to fetch products. Please try again later.',
-      data: null,
+      error: error,
     });
   }
 };
@@ -59,16 +57,15 @@ const getProductById = async (req: Request, res: Response) => {
     } else {
       res.status(400).json({
         success: false,
-        message: 'Failed to fetch products. Please try again later!',
+        message: 'No product found with this id!',
         data: null,
       });
     }
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       success: false,
       message: 'Product not found!',
-      data: null,
+      error: error,
     });
   }
 };
@@ -95,11 +92,10 @@ const updateProductById = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       success: false,
       message: 'Failed to update product. Please try again later!',
-      data: null,
+      error: error,
     });
   }
 };
@@ -108,7 +104,6 @@ const deleteProductById = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const result = await ProductServices.deleteProductByIdFromDB(productId);
-    // console.log(result)
     if (result && result?.deletedCount >= 1) {
       res.status(200).json({
         success: true,
@@ -123,11 +118,10 @@ const deleteProductById = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       success: false,
       message: 'Product did not deleted!',
-      data: null,
+      error: error,
     });
   }
 };

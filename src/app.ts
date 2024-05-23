@@ -7,13 +7,11 @@ const app: Application = express();
 app.use(express.json());
 app.use(cors());
 
-
 // aplication routes
 app.use('/api/products', ProductRouters);
 app.use('/api/orders', OrderRouters);
 
 app.get('/', (req: Request, res: Response) => {
-
   res.send('Running!');
 });
 
